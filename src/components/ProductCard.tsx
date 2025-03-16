@@ -1,11 +1,14 @@
+import Image from "./Image";
+
 interface IProps {}
 
 const ProductCard = ({}: IProps) => {
   return (
     <div className="border rounded-md p-2 flex flex-col">
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Regera_%28light_gradient%29.png/1024px-Regera_%28light_gradient%29.png"
+      <Image
+        imageURL="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Regera_%28light_gradient%29.png/1024px-Regera_%28light_gradient%29.png"
         alt="Car photo"
+        className="w-full h-40 object-cover rounded-md"
       />
 
       <h3>Koenigsegg Regera</h3>
@@ -25,10 +28,10 @@ const ProductCard = ({}: IProps) => {
 
       <div className="flex justify-between items-center">
         <span>$2,000,000</span>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Regera_%28light_gradient%29.png/1024px-Regera_%28light_gradient%29.png"
+        <Image
+          imageURL="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Regera_%28light_gradient%29.png/1024px-Regera_%28light_gradient%29.png"
           alt="Car photo"
-          className="w-10 h-10 rounded-full"
+          className="w-10 h-10 rounded-full object-cover"
         />
       </div>
 
