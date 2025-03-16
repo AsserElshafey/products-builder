@@ -1,4 +1,6 @@
 import Image from "./Image";
+import Button from "./ui/Button";
+import { textSlicer } from "../utils/functions";
 
 interface IProps {}
 
@@ -13,11 +15,9 @@ const ProductCard = ({}: IProps) => {
 
       <h3>Koenigsegg Regera</h3>
       <p>
-        The Koenigsegg Regera is a limited production, plug-in hybrid grand
-        touring sports car manufactured by Swedish automotive manufacturer
-        Koenigsegg. It was unveiled at the March 2015 Geneva Motor Show. The
-        name Regera is a Swedish verb, meaning "to reign" or "to rule".
-        Koenigsegg produced 85 Regeras, most of which were sold upon unveiling.
+        {textSlicer(
+          `The Koenigsegg Regera is a limited production, plug-in hybrid grand touring sports car manufactured by Swedish automotive manufacturer Koenigsegg. It was unveiled at the March 2015 Geneva Motor Show. The name Regera is a Swedish verb, meaning "to reign" or "to rule". Koenigsegg produced 85 Regeras, most of which were sold upon unveiling.`
+        )}
       </p>
 
       <div className="flex items-center my-4 gap-2">
@@ -36,12 +36,8 @@ const ProductCard = ({}: IProps) => {
       </div>
 
       <div className="flex gap-2">
-        <button className="w-full bg-indigo-600 text-white rounded-md p-2 mt-2">
-          Edit
-        </button>
-        <button className="w-full bg-red-600 text-white rounded-md p-2 mt-2">
-          Delete
-        </button>
+        <Button className="bg-indigo-600">Edit</Button>
+        <Button className="bg-red-600">Delete</Button>
       </div>
     </div>
   );
