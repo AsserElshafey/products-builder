@@ -1,4 +1,5 @@
 import ProductCard from "./components/ProductCard";
+import Moadl from "./components/ui/Modal";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
         <ProductCard />
         <ProductCard />
       </div>
+      <Moadl />
     </main>
   );
 };
