@@ -1,29 +1,46 @@
 import ProductCard from "./components/ProductCard";
 import Moadl from "./components/ui/Modal";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import Button from "./components/ui/Button";
 import { productList, formInputsList } from "./data";
 import Input from "./components/ui/Input";
 import { IProduct } from "./interfaces";
+import { productValidation } from "./validation";
 
 const App = () => {
-  // ------------ STATE ------------
-  const [product, setProduct] = useState<IProduct>({
+  const deafultProduct = {
     title: "",
     description: "",
     imageURL: "",
     price: "",
     colors: [],
     category: { name: "", imageURL: "" },
-  });
+  };
+  // ------------ STATE ------------
+  const [product, setProduct] = useState<IProduct>(deafultProduct);
   const [isOpen, setIsOpen] = useState(false);
 
   // ------------ Handler ------------
   const open = () => setIsOpen(true);
-  const close = () => setIsOpen(false);
+  const close = () => {
+    setProduct(deafultProduct);
+    setIsOpen(false);
+  };
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const formHandler = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const errors = productValidation({
+      title: product.title,
+      description: product.description,
+      imageURL: product.imageURL,
+      price: product.price,
+    });
+    console.log(product);
+    console.log(errors);
   };
 
   /* -------------- RENDER -------------- */
@@ -31,7 +48,7 @@ const App = () => {
     <ProductCard key={product.id} product={product} />
   ));
   const renderFormInputList = formInputsList.map((input) => (
-    <div className="flex flex-col">
+    <div className="flex flex-col" key={input.id}>
       <label htmlFor={input.id} className="text-md font-bold text-gray-800">
         {input.label}
       </label>
@@ -55,7 +72,7 @@ const App = () => {
         {renderProductList}
       </div>
       <Moadl isOpen={isOpen} close={close} title="Add New Product">
-        <form className="space-y-2">
+        <form className="space-y-2" onSubmit={formHandler}>
           {renderFormInputList}
           <div className="flex itemsc-center space-x-4">
             <Button className="bg-red-500 hover:bg-red-700" onClick={close}>
