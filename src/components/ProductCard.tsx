@@ -1,38 +1,46 @@
+import { IProduct } from "../interfaces";
 import Image from "./Image";
 import Button from "./ui/Button";
 import { textSlicer } from "../utils/functions";
 
-interface IProps {}
+interface IProps {
+  product: IProduct;
+}
 
-const ProductCard = ({}: IProps) => {
+const ProductCard = ({ product }: IProps) => {
+  const { title, description, imageURL, price, colors, category } = product;
+
+  const renderColors = colors.map((color) => (
+    <span
+      key={color}
+      className={`w-5 h-5 rounded-full`}
+      style={{ backgroundColor: color }}
+    />
+  ));
+
   return (
     <div className="max-w-sm md:max-w-lg mx-auto border rounded-md p-2 flex flex-col">
       <Image
-        imageURL="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Regera_%28light_gradient%29.png/1024px-Regera_%28light_gradient%29.png"
-        alt="Car photo"
-        className="w-full h-40 object-cover rounded-md"
+        imageURL={imageURL}
+        alt={title}
+        className="w-full h-60 object-cover rounded-md"
       />
 
-      <h3 className="text-2xl font-bold my-4">Koenigsegg Regera</h3>
-      <p className="text-sm text-gray-600">
-        {textSlicer(
-          `The Koenigsegg Regera is a limited production, plug-in hybrid grand touring sports car manufactured by Swedish automotive manufacturer Koenigsegg. It was unveiled at the March 2015 Geneva Motor Show. The name Regera is a Swedish verb, meaning "to reign" or "to rule". Koenigsegg produced 85 Regeras, most of which were sold upon unveiling.`
-        )}
-      </p>
+      <h3 className="text-2xl font-bold my-4">{title}</h3>
+      <p className="text-sm text-gray-600">{textSlicer(description)}</p>
 
-      <div className="flex items-center my-4 gap-2">
-        <span className="w-5 h-5 bg-indigo-600 rounded-full" />
-        <span className="w-5 h-5 bg-green-600 rounded-full" />
-        <span className="w-5 h-5 bg-red-600 rounded-full" />
-      </div>
+      <div className="flex items-center my-4 gap-2">{renderColors}</div>
 
       <div className="flex justify-between items-center">
-        <span>$2,000,000</span>
-        <Image
-          imageURL="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Regera_%28light_gradient%29.png/1024px-Regera_%28light_gradient%29.png"
-          alt="Car photo"
-          className="w-10 h-10 rounded-full object-cover"
-        />
+        <span className="text-lg font-semibold">${price}</span>
+        <div className="flex items-center gap-2">
+          <Image
+            imageURL={category.imageURL}
+            alt={category.name}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+          <p className="text-sm font-bold">{category.name}</p>
+        </div>
       </div>
 
       <div className="flex gap-2">
