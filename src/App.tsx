@@ -1,22 +1,30 @@
 import ProductCard from "./components/ProductCard";
 import Moadl from "./components/ui/Modal";
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import Button from "./components/ui/Button";
 import { productList, formInputsList } from "./data";
 import Input from "./components/ui/Input";
+import { IProduct } from "./interfaces";
 
 const App = () => {
   // ------------ STATE ------------
+  const [product, setProduct] = useState<IProduct>({
+    title: "",
+    description: "",
+    imageURL: "",
+    price: "",
+    colors: [],
+    category: { name: "", imageURL: "" },
+  });
   const [isOpen, setIsOpen] = useState(false);
 
   // ------------ Handler ------------
-  function open() {
-    setIsOpen(true);
-  }
-
-  function close() {
-    setIsOpen(false);
-  }
+  const open = () => setIsOpen(true);
+  const close = () => setIsOpen(false);
+  const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setProduct((prev) => ({ ...prev, [name]: value }));
+  };
 
   /* -------------- RENDER -------------- */
   const renderProductList = productList.map((product) => (
@@ -27,7 +35,13 @@ const App = () => {
       <label htmlFor={input.id} className="text-md font-bold text-gray-800">
         {input.label}
       </label>
-      <Input type="text" id={input.id} name={input.name} />
+      <Input
+        type="text"
+        id={input.id}
+        name={input.name}
+        value={product[input.name]}
+        onChange={onChangeHandler}
+      />
     </div>
   ));
 
@@ -41,13 +55,17 @@ const App = () => {
         {renderProductList}
       </div>
       <Moadl isOpen={isOpen} close={close} title="Add New Product">
-        {renderFormInputList}
-        <div className="flex itemsc-center space-x-4">
-          <Button className="bg-red-500 hover:bg-red-700" onClick={close}>
-            Cancel
-          </Button>
-          <Button className="bg-indigo-500 hover:bg-indigo-700">Submit</Button>
-        </div>
+        <form className="space-y-2">
+          {renderFormInputList}
+          <div className="flex itemsc-center space-x-4">
+            <Button className="bg-red-500 hover:bg-red-700" onClick={close}>
+              Cancel
+            </Button>
+            <Button className="bg-indigo-500 hover:bg-indigo-700">
+              Submit
+            </Button>
+          </div>
+        </form>
       </Moadl>
     </main>
   );
