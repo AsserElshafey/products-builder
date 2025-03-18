@@ -6,15 +6,15 @@ interface IProps {}
 
 const ProductCard = ({}: IProps) => {
   return (
-    <div className="border rounded-md p-2 flex flex-col">
+    <div className="max-w-sm md:max-w-lg mx-auto border rounded-md p-2 flex flex-col">
       <Image
         imageURL="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Regera_%28light_gradient%29.png/1024px-Regera_%28light_gradient%29.png"
         alt="Car photo"
         className="w-full h-40 object-cover rounded-md"
       />
 
-      <h3>Koenigsegg Regera</h3>
-      <p>
+      <h3 className="text-2xl font-bold my-4">Koenigsegg Regera</h3>
+      <p className="text-sm text-gray-600">
         {textSlicer(
           `The Koenigsegg Regera is a limited production, plug-in hybrid grand touring sports car manufactured by Swedish automotive manufacturer Koenigsegg. It was unveiled at the March 2015 Geneva Motor Show. The name Regera is a Swedish verb, meaning "to reign" or "to rule". Koenigsegg produced 85 Regeras, most of which were sold upon unveiling.`
         )}
