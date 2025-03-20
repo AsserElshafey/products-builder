@@ -10,7 +10,7 @@ import ErrorMessage from "./components/ErrorMessage";
 import CircleColor from "./components/CircleColor";
 import { v4 as uuid } from "uuid";
 import Select from "./components/ui/Select";
-import { ProductNameTypes } from "./components/types";
+import { ProductNameTypes } from "./types";
 
 const App = () => {
   const deafultProduct = {
@@ -25,6 +25,7 @@ const App = () => {
   const [products, setProducts] = useState<IProduct[]>(productList);
   const [product, setProduct] = useState<IProduct>(deafultProduct);
   const [productToEdit, setProductToEdit] = useState<IProduct>(deafultProduct);
+  const [productToEditIdx, setProductToEditIdx] = useState<number>(0);
   const [errors, setErrors] = useState({
     title: "",
     description: "",
@@ -38,13 +39,31 @@ const App = () => {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
 
   // ------------ Handler ------------
-  const open = () => setIsOpen(true);
+  const open = () => {
+    setIsOpen(true);
+    setErrors({
+      title: "",
+      description: "",
+      imageURL: "",
+      price: "",
+      colors: "",
+    });
+  };
   const close = () => {
+    setIsOpen(false);
     setProduct(deafultProduct);
     setTempColors([]);
-    setIsOpen(false);
   };
-  const openEdit = () => setIsOpenEdit(true);
+  const openEdit = () => {
+    setIsOpenEdit(true);
+    setErrors({
+      title: "",
+      description: "",
+      imageURL: "",
+      price: "",
+      colors: "",
+    });
+  };
   const closeEdit = () => {
     setProductToEdit(deafultProduct);
     setTempColors([]);
@@ -105,7 +124,7 @@ const App = () => {
       description,
       imageURL,
       price,
-      colors: tempColors.join(","),
+      colors: productToEdit.colors.join(","),
     });
 
     const hasError =
@@ -117,16 +136,25 @@ const App = () => {
       return;
     }
 
+    const updatedProducts = [...products];
+    updatedProducts[productToEditIdx] = {
+      ...productToEdit,
+      colors: tempColors.concat(productToEdit.colors),
+    };
+    setProducts(updatedProducts);
+
     closeEdit();
   };
 
   /* -------------- RENDER -------------- */
-  const renderProductList = products.map((product) => (
+  const renderProductList = products.map((product, idx) => (
     <ProductCard
       key={product.id}
       product={product}
       setProductToEdit={setProductToEdit}
       openEditModal={openEdit}
+      idx={idx}
+      setProductToEditIdx={setProductToEditIdx}
     />
   ));
   const renderFormInputList = formInputsList.map((input) => (
@@ -150,6 +178,10 @@ const App = () => {
       color={color}
       onClick={() => {
         if (tempColors.includes(color)) {
+          setTempColors((prev) => prev.filter((c) => c !== color));
+          return;
+        }
+        if (productToEdit.colors.includes(color)) {
           setTempColors((prev) => prev.filter((c) => c !== color));
           return;
         }
@@ -246,8 +278,10 @@ const App = () => {
           )}
           {renderProductEditWithErrorMsg("price", "Product Price", "price")}
           <Select
-            selected={selectedCategory}
-            setSelected={setSelectedCategory}
+            selected={productToEdit.category}
+            setSelected={(value) =>
+              setProductToEdit({ ...productToEdit, category: value })
+            }
           />
           <h2 className="text-lg font-bold py-2 text-gray-800">
             Pick Product Colors
@@ -257,7 +291,7 @@ const App = () => {
             <ErrorMessage msg={errors.colors} />
           </div>
           <div className="flex items-center justify-start space-x-2 flex-wrap">
-            {tempColors.map((color) => (
+            {tempColors.concat(productToEdit.colors).map((color) => (
               <span
                 key={color}
                 className="py-0.5 px-1 text-white rounded-md my-2"
@@ -268,7 +302,7 @@ const App = () => {
             ))}
           </div>
           <div className="flex itemsc-center space-x-4">
-            <Button className="bg-red-500 hover:bg-red-700" onClick={close}>
+            <Button className="bg-red-500 hover:bg-red-700" onClick={closeEdit}>
               Cancel
             </Button>
             <Button className="bg-indigo-500 hover:bg-indigo-700">
