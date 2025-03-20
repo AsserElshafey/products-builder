@@ -2,6 +2,7 @@ import { IProduct } from "../interfaces";
 import Image from "./Image";
 import Button from "./ui/Button";
 import { textSlicer } from "../utils/functions";
+import CircleColor from "./CircleColor";
 
 interface IProps {
   product: IProduct;
@@ -11,11 +12,7 @@ const ProductCard = ({ product }: IProps) => {
   const { title, description, imageURL, price, colors, category } = product;
 
   const renderColors = colors.map((color) => (
-    <span
-      key={color}
-      className={`w-5 h-5 rounded-full`}
-      style={{ backgroundColor: color }}
-    />
+    <CircleColor key={color} color={color} />
   ));
 
   return (

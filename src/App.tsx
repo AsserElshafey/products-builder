@@ -2,11 +2,13 @@ import ProductCard from "./components/ProductCard";
 import Moadl from "./components/ui/Modal";
 import { useState, ChangeEvent, FormEvent } from "react";
 import Button from "./components/ui/Button";
-import { productList, formInputsList } from "./data";
+import { productList, formInputsList, colors } from "./data";
 import Input from "./components/ui/Input";
 import { IProduct } from "./interfaces";
 import { productValidation } from "./validation";
 import ErrorMessage from "./components/ErrorMessage";
+import CircleColor from "./components/CircleColor";
+import { v4 as uuid } from "uuid";
 
 const App = () => {
   const deafultProduct = {
@@ -18,6 +20,7 @@ const App = () => {
     category: { name: "", imageURL: "" },
   };
   // ------------ STATE ------------
+  const [products, setProducts] = useState<IProduct[]>(productList);
   const [product, setProduct] = useState<IProduct>(deafultProduct);
   const [errors, setErrors] = useState({
     title: "",
@@ -25,18 +28,20 @@ const App = () => {
     imageURL: "",
     price: "",
   });
+  const [tempColors, setTempColors] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
   // ------------ Handler ------------
   const open = () => setIsOpen(true);
   const close = () => {
     setProduct(deafultProduct);
+    setTempColors([]);
     setIsOpen(false);
   };
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
-    setErrors({ ...errors, [name]: "" });
+    setErrors((errors) => ({ ...errors, [name]: "" }));
   };
 
   const formHandler = (event: FormEvent<HTMLFormElement>) => {
@@ -59,11 +64,16 @@ const App = () => {
       return;
     }
 
-    console.log("Product is valid");
+    setProducts((prev) => [
+      { ...product, id: uuid(), colors: tempColors },
+      ...prev,
+    ]);
+
+    close();
   };
 
   /* -------------- RENDER -------------- */
-  const renderProductList = productList.map((product) => (
+  const renderProductList = products.map((product) => (
     <ProductCard key={product.id} product={product} />
   ));
   const renderFormInputList = formInputsList.map((input) => (
@@ -81,6 +91,19 @@ const App = () => {
       <ErrorMessage msg={errors[input.name]} />
     </div>
   ));
+  const renderProductColors = colors.map((color) => (
+    <CircleColor
+      key={color}
+      color={color}
+      onClick={() => {
+        if (tempColors.includes(color)) {
+          setTempColors((prev) => prev.filter((c) => c !== color));
+          return;
+        }
+        setTempColors((prev) => [...prev, color]);
+      }}
+    />
+  ));
 
   return (
     <main className="container mx-auto">
@@ -94,6 +117,20 @@ const App = () => {
       <Moadl isOpen={isOpen} close={close} title="Add New Product">
         <form className="space-y-2" onSubmit={formHandler}>
           {renderFormInputList}
+          <div className="flex items-center space-x-2 flex-wrap">
+            {renderProductColors}
+          </div>
+          <div className="flex items-center justify-start space-x-2 flex-wrap">
+            {tempColors.map((color) => (
+              <span
+                key={color}
+                className="py-0.5 px-1 text-white rounded-md my-2"
+                style={{ backgroundColor: color }}
+              >
+                {color}
+              </span>
+            ))}
+          </div>
           <div className="flex itemsc-center space-x-4">
             <Button className="bg-red-500 hover:bg-red-700" onClick={close}>
               Cancel
