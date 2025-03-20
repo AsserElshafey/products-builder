@@ -13,12 +13,13 @@
  * @property {string} imageURL - Error message for the imageURL field.
  * @property {string} price - Error message for the price field.
  */
-export const productValidation = (product: {title: string, description: string, imageURL: string, price:string}) => {
-  const errors :{title: string, description: string, imageURL: string, price:string} = {
+export const productValidation = (product: {title: string, description: string, imageURL: string, price:string, colors:string}) => {
+  const errors :{title: string, description: string, imageURL: string, price:string ,colors:string} = {
     title: "",
     description: "",
     imageURL: "",
-    price:""
+    price:"",
+    colors:""
   };
 
   const validUrl = /^(ftp|http|https):\/\/[^ "]+$/.test(product.imageURL);
@@ -37,6 +38,10 @@ export const productValidation = (product: {title: string, description: string, 
 
   if(!product.price.trim() || isNaN(Number(product.price))){
     errors.price = "Valid Price is required";
+  }
+
+  if(!product.colors.trim() || product.colors.length < 1){
+    errors.colors = "At least one color is required";
   }
 
 
