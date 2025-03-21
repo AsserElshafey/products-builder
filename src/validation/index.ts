@@ -40,7 +40,9 @@ export const productValidation = (product: {title: string, description: string, 
     errors.price = "Valid Price is required";
   }
 
-  if(!product.colors.trim() || product.colors.length < 1){
+  if (product.colors === "") {
+    errors.colors = "";
+  } else if (!product.colors) {
     errors.colors = "At least one color is required";
   }
 

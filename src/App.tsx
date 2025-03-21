@@ -11,6 +11,7 @@ import CircleColor from "./components/CircleColor";
 import { v4 as uuid } from "uuid";
 import Select from "./components/ui/Select";
 import { ProductNameTypes } from "./types";
+import toast, { Toaster } from "react-hot-toast";
 
 const App = () => {
   const deafultProduct = {
@@ -37,6 +38,7 @@ const App = () => {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
 
   // ------------ Handler ------------
   const open = () => {
@@ -68,6 +70,12 @@ const App = () => {
     setProductToEdit(deafultProduct);
     setTempColors([]);
     setIsOpenEdit(false);
+  };
+  const openDelete = () => {
+    setIsOpenDelete(true);
+  };
+  const closeDelete = () => {
+    setIsOpenDelete(false);
   };
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -113,37 +121,72 @@ const App = () => {
     ]);
 
     close();
+    toast("Product has been added successfully!", {
+      icon: "👏",
+      style: {
+        backgroundColor: "black",
+        color: "white",
+      },
+    });
   };
 
   const formEditHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { title, description, imageURL, price } = productToEdit;
 
+    // Validate product fields (excluding colors for editing)
     const errors = productValidation({
       title,
       description,
       imageURL,
       price,
-      colors: productToEdit.colors.join(","),
+      colors: "", // Skip color validation for editing
     });
 
-    const hasError =
-      Object.values(errors).some((value) => value === "") &&
-      Object.values(errors).every((value) => value === "");
+    // Check if there are any errors (excluding colors)
+    const hasError = Object.entries(errors).some(
+      ([key, value]) => key !== "colors" && value !== ""
+    );
 
-    if (!hasError) {
+    if (hasError) {
       setErrors(errors);
       return;
     }
 
+    // Combine existing colors and tempColors
+    const combinedColors = [...productToEdit.colors, ...tempColors];
+
+    // Update the product
     const updatedProducts = [...products];
     updatedProducts[productToEditIdx] = {
       ...productToEdit,
-      colors: tempColors.concat(productToEdit.colors),
+      colors: combinedColors, // Use combined colors
     };
     setProducts(updatedProducts);
 
     closeEdit();
+    toast("Product has been updated successfully!", {
+      icon: "👏",
+      style: {
+        backgroundColor: "black",
+        color: "white",
+      },
+    });
+  };
+
+  const removeProducthandler = () => {
+    const filtered = products.filter(
+      (product) => product.id !== productToEdit.id
+    );
+    setProducts(filtered);
+    closeDelete();
+    toast("Product has been deleted successfully!", {
+      icon: "👏",
+      style: {
+        backgroundColor: "#c2344d",
+        color: "white",
+      },
+    });
   };
 
   /* -------------- RENDER -------------- */
@@ -153,6 +196,7 @@ const App = () => {
       product={product}
       setProductToEdit={setProductToEdit}
       openEditModal={openEdit}
+      openDeleteModal={openDelete}
       idx={idx}
       setProductToEditIdx={setProductToEditIdx}
     />
@@ -311,6 +355,31 @@ const App = () => {
           </div>
         </form>
       </Modal>
+
+      {/* ------------ Delete PRODUCT MODAL ------------ */}
+      <Modal
+        isOpen={isOpenDelete}
+        close={closeDelete}
+        title="Are you sure you want to remove this Product from your Store?"
+        description="Deleting this product will remove it permanently from your inventory. Any associated data, sales history, and other related information will also be deleted. Please make sure this is the intended action."
+      >
+        <div className="flex itemsc-center space-x-4">
+          <Button
+            className="bg-red-500 hover:bg-red-700"
+            onClick={removeProducthandler}
+          >
+            Yes, Remove
+          </Button>
+          <Button
+            className="bg-gray-400 hover:bg-gray-600"
+            onClick={closeDelete}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Modal>
+
+      <Toaster />
     </main>
   );
 };

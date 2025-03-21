@@ -8,6 +8,7 @@ interface IProps {
   product: IProduct;
   setProductToEdit: (product: IProduct) => void;
   openEditModal: () => void;
+  openDeleteModal: () => void;
   idx: number;
   setProductToEditIdx: (idx: number) => void;
 }
@@ -16,6 +17,7 @@ const ProductCard = ({
   product,
   setProductToEdit,
   openEditModal,
+  openDeleteModal,
   idx,
   setProductToEditIdx,
 }: IProps) => {
@@ -31,6 +33,11 @@ const ProductCard = ({
     setProductToEdit(product);
     openEditModal();
     setProductToEditIdx(idx);
+  };
+
+  const onDelete = () => {
+    setProductToEdit(product);
+    openDeleteModal();
   };
 
   return (
@@ -59,10 +66,12 @@ const ProductCard = ({
       </div>
 
       <div className="flex gap-2">
-        <Button className="bg-indigo-600" onClick={onEdit}>
+        <Button className="bg-indigo-600 hover:bg-indigo-800" onClick={onEdit}>
           Edit
         </Button>
-        <Button className="bg-red-600">Delete</Button>
+        <Button className="bg-red-600 hover:bg-red-800" onClick={onDelete}>
+          Delete
+        </Button>
       </div>
     </div>
   );
