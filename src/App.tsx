@@ -77,17 +77,23 @@ const App = () => {
   const closeDelete = () => {
     setIsOpenDelete(false);
   };
-  const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setProduct((prev) => ({ ...prev, [name]: value }));
-    setErrors((errors) => ({ ...errors, [name]: "" }));
-  };
+  const onChangeHandler = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setProduct((prev) => ({ ...prev, [name]: value }));
+      setErrors((errors) => ({ ...errors, [name]: "" }));
+    },
+    []
+  );
 
-  const onChangeEditHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setProductToEdit((prev) => ({ ...prev, [name]: value }));
-    setErrors((errors) => ({ ...errors, [name]: "" }));
-  };
+  const onChangeEditHandler = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setProductToEdit((prev) => ({ ...prev, [name]: value }));
+      setErrors((errors) => ({ ...errors, [name]: "" }));
+    },
+    []
+  );
 
   const formHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -261,12 +267,14 @@ const App = () => {
 
   return (
     <main className="container mx-auto">
-      <div className="flex items-center justify-center p-4">
-        <div className="p-4 w-lg">
-          <Button className="bg-indigo-500 hover:bg-indigo-700" onClick={open}>
-            Add a New Product
-          </Button>
-        </div>
+      <div className="flex items-center justify-center my-10">
+        <Button
+          className="bg-indigo-500 hover:bg-indigo-700 px-10"
+          width="w-fit"
+          onClick={open}
+        >
+          Add a New Product
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 m-2">

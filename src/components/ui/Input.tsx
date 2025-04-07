@@ -1,10 +1,11 @@
-import { InputHTMLAttributes, memo } from "react";
+import { forwardRef, InputHTMLAttributes, memo, Ref } from "react";
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {}
 
-const Input = ({ ...rest }: IProps) => {
+const Input = forwardRef(({ ...rest }: IProps, ref: Ref<HTMLInputElement>) => {
   return (
     <input
+      ref={ref}
       type="text"
       name=""
       id=""
@@ -12,6 +13,6 @@ const Input = ({ ...rest }: IProps) => {
       {...rest}
     />
   );
-};
+});
 
 export default memo(Input);
