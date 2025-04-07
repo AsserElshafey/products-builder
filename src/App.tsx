@@ -261,9 +261,13 @@ const App = () => {
 
   return (
     <main className="container mx-auto">
-      <Button className="bg-indigo-500 hover:bg-indigo-700" onClick={open}>
-        Add
-      </Button>
+      <div className="flex items-center justify-center p-4">
+        <div className="p-4 w-lg">
+          <Button className="bg-indigo-500 hover:bg-indigo-700" onClick={open}>
+            Add a New Product
+          </Button>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 m-2">
         {renderProductList}
