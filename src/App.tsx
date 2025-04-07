@@ -1,6 +1,6 @@
 import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Modal";
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, useCallback } from "react";
 import Button from "./components/ui/Button";
 import { productList, formInputsList, colors, categories } from "./data";
 import Input from "./components/ui/Input";
@@ -56,7 +56,7 @@ const App = () => {
     setProduct(deafultProduct);
     setTempColors([]);
   };
-  const openEdit = () => {
+  const openEdit = useCallback(() => {
     setIsOpenEdit(true);
     setErrors({
       title: "",
@@ -65,15 +65,15 @@ const App = () => {
       price: "",
       colors: "",
     });
-  };
+  }, []);
   const closeEdit = () => {
     setProductToEdit(deafultProduct);
     setTempColors([]);
     setIsOpenEdit(false);
   };
-  const openDelete = () => {
+  const openDelete = useCallback(() => {
     setIsOpenDelete(true);
-  };
+  }, []);
   const closeDelete = () => {
     setIsOpenDelete(false);
   };

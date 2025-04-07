@@ -3,6 +3,7 @@ import Image from "./Image";
 import Button from "./ui/Button";
 import { textSlicer } from "../utils/functions";
 import CircleColor from "./CircleColor";
+import { memo } from "react";
 
 interface IProps {
   product: IProduct;
@@ -77,4 +78,4 @@ const ProductCard = ({
   );
 };
 
-export default ProductCard;
+export default memo(ProductCard);
